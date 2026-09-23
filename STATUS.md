@@ -26,36 +26,45 @@
 Paste the following instruction into the Antigravity (`agy`) chat to execute the remainder of the plan sequentially to 100% completion:
 
 ```text
-Read PLAN.md thoroughly and execute all remaining phases (Phase 2, Phase 3, Phase 4, and Phase 5) sequentially to 100% completion on branch feat/complete-production-plan:
+Step 0: Repository & Environment Setup
+- Run `git fetch origin` to ensure all remote commits from upstream are present.
+- Checkout the feature branch: `git checkout feat/complete-production-plan`.
+- Verify you are up-to-date with `origin/main` (`git merge origin/main` if behind).
+- Ensure Python venv is active and install requirements: `.\venv\Scripts\pip.exe install -r backend/requirements.txt`.
+- Ensure dashboard dependencies are installed: `cd dashboard && npm install && cd ..`.
 
-1. Phase 2: Implement the real-world PCAP/Zeek ingestion pipeline:
-   - Build ingest/pcap_loader.py using scapy.utils.PcapReader streaming iterator.
-   - Enhance ingest/parser.py for multi-log Zeek correlation.
-   - Add POST /api/ingest/upload, POST /api/ingest/stop, and GET /api/ingest/status in backend/main.py.
-   - Write tests/test_phase2_ingest.py and verify with pytest.
+Step 1: Execute Phase 2 (Real-World PCAP & Zeek Log Ingest)
+- Build `ingest/pcap_loader.py` using `scapy.utils.PcapReader` streaming iterator.
+- Enhance `ingest/parser.py` for multi-log Zeek correlation (conn, dns, ssl).
+- Add `POST /api/ingest/upload`, `POST /api/ingest/stop`, and `GET /api/ingest/status` in `backend/main.py`.
+- Write `tests/test_phase2_ingest.py` and run Checkpoint CP-2: `.\venv\Scripts\python.exe -m pytest tests/test_phase2_ingest.py -v`.
 
-2. Phase 3: Implement the Free Groq AI Incident Copilot:
-   - Create backend/services/groq_service.py using Groq SDK (llama-3.3-70b-versatile / llama-3.1-8b-instant).
-   - Include deterministic rule-based fallback when GROQ_API_KEY is not set.
-   - Add POST /api/ai/analyze-alert/{alert_id} and POST /api/ai/chat with SQLite response caching.
-   - Write tests/test_phase3_ai.py and verify with pytest.
+Step 2: Execute Phase 3 (Free Groq AI Incident Copilot)
+- Create `backend/services/groq_service.py` using Groq SDK (`llama-3.3-70b-versatile` / `llama-3.1-8b-instant`).
+- Include deterministic rule-based fallback when `GROQ_API_KEY` is not set so offline operation works 100%.
+- Add `POST /api/ai/analyze-alert/{alert_id}` and `POST /api/ai/chat` with SQLite response caching.
+- Write `tests/test_phase3_ai.py` and run Checkpoint CP-3: `.\venv\Scripts\python.exe -m pytest tests/test_phase3_ai.py -v`.
 
-3. Phase 4: Overhaul the Frontend Dashboard (dashboard/):
-   - Remove AI-slop (oversaturated cyan glow, fake static topology).
-   - Apply clean Slate theme (#0f172a / #1e293b) with crisp typography.
-   - Add the Traffic Light Facility Status Banner (Normal, Elevated, Critical).
-   - Add Executive / Deep Forensic dual-view toggle.
-   - Build FileUploadModal.jsx for drag-and-drop PCAP/Zeek ingestion.
-   - Build AiCopilotDrawer.jsx for remediation checklists, firewall rules, and interactive threat chat.
-   - Make NetworkTopologyGraph.jsx dynamically render active hosts from sliding window.
-   - Add search, severity filtering, and CSV/JSON export to AlertFeed.jsx.
-   - Verify with `npm --prefix dashboard run build`.
+Step 3: Execute Phase 4 (Production SOC UI Overhaul)
+- Remove AI-slop (oversaturated cyan glow, fake static topology).
+- Apply clean Slate theme (`#0f172a` / `#1e293b`) with crisp typography.
+- Add the Traffic Light Facility Status Banner (Normal, Elevated, Critical).
+- Add Executive / Deep Forensic dual-view toggle.
+- Build `FileUploadModal.jsx` for drag-and-drop PCAP/Zeek ingestion.
+- Build `AiCopilotDrawer.jsx` for remediation checklists, firewall rules, and interactive threat chat.
+- Make `NetworkTopologyGraph.jsx` dynamically render active hosts from sliding window.
+- Add search, severity filtering, and CSV/JSON export to `AlertFeed.jsx`.
+- Verify Checkpoint CP-4: `npm --prefix dashboard run build`.
 
-4. Phase 5: Build the Automated Test Suite & Edge Case Hardening:
-   - Write tests/test_math_features.py (Shannon entropy edge cases, zero division in IAT CV, ngram limits).
-   - Write tests/test_heuristics.py (boundary triggers and zero false positives on benign traffic).
-   - Write tests/test_api_endpoints.py (WebSocket resilience and upload APIs).
-   - Verify all tests pass with pytest.
+Step 4: Execute Phase 5 (Automated Test Suite & Edge Case Hardening)
+- Write `tests/test_math_features.py` (Shannon entropy edge cases, zero division in IAT CV, ngram limits).
+- Write `tests/test_heuristics.py` (boundary triggers and zero false positives on benign traffic).
+- Write `tests/test_api_endpoints.py` (WebSocket resilience and upload APIs).
+- Verify Checkpoint CP-5: `.\venv\Scripts\python.exe -m pytest tests/ -v`.
 
-Ensure all verification checkpoints (CP-2 through CP-5 in PLAN.md) pass cleanly with zero regressions.
+Step 5: Final Verification & Git Delivery
+- Ensure all checkpoints CP-2 through CP-5 pass with 0 errors.
+- Commit all changes cleanly with descriptive conventional commit messages.
+- Push the branch: `git push -u fork feat/complete-production-plan`.
+- Provide the GitHub Pull Request URL to merge into Vivek-Kamannavar/Cyber-Threat:main.
 ```
